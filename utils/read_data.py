@@ -33,7 +33,8 @@ class SplitWavAudio:
         t1 = from_min * 1000
         t2 = to_min * 1000
         split_audio = self.audio[t1:t2]
-        split_audio.export(self.output_folder + f'audio_{params.MODE}/' + split_filename + '.waw', format="wav")
+        split_audio.export(self.output_folder + f'audio_{params.MODE}/' + split_filename + '.waw', format="wav",
+                           bitrate=params.bitrate)
         self.write_file(t1, t2, self.output_folder + f'text_{params.MODE}/' + split_filename + '.txt')
 
     def multiple_split(self, sec_per_split):

@@ -7,12 +7,13 @@ from torch import nn
 import torchaudio
 from torch.utils.data import DataLoader
 from torch.utils.data import Dataset
+import datetime
 
 
 def train(model, N_EPOCHS, trainloader, lr=0.001, BATCH_SIZE=128, ITER_LOG=None):
     if not ITER_LOG:
         ITER_LOG = trainloader.__len__() - 1
-
+    device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
     now = datetime.datetime.now()
     optimizer = torch.optim.Adam(model.parameters(), lr=lr, betas=(0.5, 0.999))
     criterion = nn.CrossEntropyLoss()

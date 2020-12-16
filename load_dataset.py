@@ -1,5 +1,5 @@
 import wandb
-import torch 
+import torch
 # import torchvision
 from torch import nn
 # !pip install torchaudio
@@ -7,11 +7,16 @@ from torch import nn
 import torchaudio
 from torch.utils.data import DataLoader
 from torch.utils.data import Dataset
+import os
+import numpy as np
+import pandas as pd
+
 
 def Norm(mel, mean, std, eps=1e-8):
-  mel = torch.log(mel + eps)
-  mel = (mel - mean) / std
-  return mel
+    mel = torch.log(mel + eps)
+    mel = (mel - mean) / std
+    return mel
+
 
 class dataset(Dataset):
     def __init__(self, wav_dir, n_mels, transform=None):
@@ -22,25 +27,26 @@ class dataset(Dataset):
 
     def __len__(self):
         return len(self.data)
-    
-    def noise(self,wav):
-      wav += 0.01 * torch.randn(wav.shape)
-      return wav
+
+    def noise(self, wav):
+        wav += 0.01 * torch.randn(wav.shape)
+        return wav
 
     def __getitem__(self, index):
         path = self.data[index]
         wav, sr = torchaudio.load(path + '/audio.wav')
-        wav = torch.mean(wav,dim=0)
+        wav = torch.mean(wav, dim=0)
         points = pd.read_csv(path + '/audio.txt', sep=" ")
         target = np.zeros(5000)
-        target[point] = 1.0 for point in points
 
+        for point in points:
+            target[point] = 1.0
         if self.transform:
             wav = self.transform(wav)
             wav = self.noise(wav)
 
         featurizer = torchaudio.transforms.MelSpectrogram(n_mels=self.n_mels)
         mels = featurizer(wav)
-        mels = Norm(mels,torch.mean(mels),torch.std(mels))
-        
+        mels = Norm(mels, torch.mean(mels), torch.std(mels))
+
         return mels, torch.tensor(target)

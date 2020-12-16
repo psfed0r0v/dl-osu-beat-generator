@@ -16,7 +16,7 @@ def main():
               isfile(join(params.DATA_PATH + 'audio_' + params.MODE, f))]
     for i in range(1, len(audios)):
         sound = AudioSegment.from_mp3(params.DATA_PATH + f'audio_{params.MODE}/' + str(i) + '.mp3')
-        sound.export(params.DATA_PATH + f'audio_{str(i)}.wav', format='wav')
+        sound.export(params.DATA_PATH + f'audio_{str(i)}.wav', format='wav', bitrate=params.bitrate)
         tmp = SplitWavAudio(f'audio_{str(i)}', f'text_{params.MODE}/' + str(i) + '.osu', params.DATA_PATH, 'cutted_data/')
         tmp.multiple_split(params.CUT_RATE_SEC)
         path = Path(params.DATA_PATH + f'audio_{str(i)}.wav')
