@@ -1,5 +1,8 @@
-from pydub import AudioSegment
 from config import params
+import os
+from os.path import isfile, join
+from pathlib import Path
+from pydub import AudioSegment
 
 
 class SplitWavAudio:
@@ -33,8 +36,7 @@ class SplitWavAudio:
         t1 = from_min * 1000
         t2 = to_min * 1000
         split_audio = self.audio[t1:t2]
-        split_audio.export(self.output_folder + f'audio_{params.MODE}/' + split_filename + '.waw', format="wav",
-                           bitrate=params.bitrate)
+        split_audio.export(self.output_folder + f'audio_{params.MODE}/' + split_filename + '.wav', format="wav")
         self.write_file(t1, t2, self.output_folder + f'text_{params.MODE}/' + split_filename + '.txt')
 
     def multiple_split(self, sec_per_split):
@@ -54,3 +56,24 @@ class SplitWavAudio:
         for i in range(0, total_sec - total_sec % 5, sec_per_split):
             split_fn = self.filename + '_' + str(i)
             self.single_split(i, i + sec_per_split, split_fn)
+
+
+def parse_data():
+    cur = os.getcwd()
+    Path(cur + '/cutted_data').mkdir(parents=True, exist_ok=True)
+    Path(cur + f'/cutted_data/audio_{params.MODE}').mkdir(parents=True, exist_ok=True)
+    Path(cur + f'/cutted_data/text_{params.MODE}').mkdir(parents=True, exist_ok=True)
+
+    audios = [f for f in os.listdir(params.DATA_PATH + 'audio_' + params.MODE) if
+              isfile(join(params.DATA_PATH + 'audio_' + params.MODE, f))]
+    for i in range(1, len(audios)):
+        sound = AudioSegment.from_mp3(params.DATA_PATH + f'audio_{params.MODE}/' + str(i) + '.mp3')
+        # print(i, mediainfo(params.DATA_PATH + f'audio_{params.MODE}/' + str(i) + '.mp3'))
+        sound.export(params.DATA_PATH + f'audio_{str(i)}.wav', format='wav')
+        tmp = SplitWavAudio(f'audio_{str(i)}', f'text_{params.MODE}/' + str(i) + '.osu', params.DATA_PATH,
+                            'cutted_data/')
+        tmp.multiple_split(params.CUT_RATE_SEC)
+        path = Path(params.DATA_PATH + f'audio_{str(i)}.wav')
+        path.unlink()
+
+    print('data parsed')

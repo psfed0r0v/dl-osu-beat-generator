@@ -1,31 +1,28 @@
-import wandb
 import torch
-# import torchvision
 from torch import nn
-# !pip install torchaudio
-# !pip install wandb
-import torchaudio
-from torch.utils.data import DataLoader
-from torch.utils.data import Dataset
+import wandb
 import datetime
+from config import params
 
 
-def train(model, N_EPOCHS, trainloader, lr=0.001, BATCH_SIZE=128, ITER_LOG=None):
-    if not ITER_LOG:
+def train(model, trainloader):
+    if not params.ITER_LOG:
         ITER_LOG = trainloader.__len__() - 1
-    device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-    now = datetime.datetime.now()
-    optimizer = torch.optim.Adam(model.parameters(), lr=lr, betas=(0.5, 0.999))
-    criterion = nn.CrossEntropyLoss()
 
-    for epoch in range(N_EPOCHS):
+    device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+
+    now = datetime.datetime.now()
+    optimizer = torch.optim.Adam(model.parameters(), lr=params.LEARNING_RATE)
+    criterion = nn.MSELoss()
+
+    for epoch in range(params.N_EPOCHS):
         loss_log = 0.0
         for i, data in enumerate(trainloader, 0):
             mels, labels = data[0].to(device), data[1].to(device)
-            pred = model(mels)
 
+            pred = model(mels.unsqueeze(-1).permute(0, 3, 1, 2))
             optimizer.zero_grad()
-            loss = criterion(pred, labels)
+            loss = criterion(pred.float(), labels.float())
             loss_log += loss.item()
             loss.backward()
             optimizer.step()
@@ -43,3 +40,5 @@ def train(model, N_EPOCHS, trainloader, lr=0.001, BATCH_SIZE=128, ITER_LOG=None)
                 print(' ')
 
     print('Finished Training')
+
+    return model
