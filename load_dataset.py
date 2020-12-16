@@ -1,3 +1,13 @@
+import wandb
+import torch 
+# import torchvision
+from torch import nn
+# !pip install torchaudio
+# !pip install wandb
+import torchaudio
+from torch.utils.data import DataLoader
+from torch.utils.data import Dataset
+
 def Norm(mel, mean, std, eps=1e-8):
   mel = torch.log(mel + eps)
   mel = (mel - mean) / std
