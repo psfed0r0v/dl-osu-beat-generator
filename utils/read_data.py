@@ -51,6 +51,6 @@ class SplitWavAudio:
         self.points = res
 
         total_sec = int(self.get_duration())
-        for i in range(0, total_sec, sec_per_split):
+        for i in range(0, total_sec - total_sec % 5, sec_per_split):
             split_fn = self.filename + '_' + str(i)
             self.single_split(i, i + sec_per_split, split_fn)
