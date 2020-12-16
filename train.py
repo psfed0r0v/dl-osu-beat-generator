@@ -3,6 +3,7 @@ from torch import nn
 import wandb
 import datetime
 from config import get_params
+from tqdm import tqdm
 
 
 def train(model, trainloader):
@@ -15,7 +16,7 @@ def train(model, trainloader):
     optimizer = torch.optim.Adam(model.parameters(), lr=params.LEARNING_RATE)
     criterion = nn.MSELoss()
 
-    for epoch in range(params.N_EPOCHS):
+    for epoch in tqdm(range(params.N_EPOCHS)):
         loss_log = 0.0
         for i, data in enumerate(trainloader, 0):
             mels, labels = data[0].to(device), data[1].to(device)
@@ -28,7 +29,7 @@ def train(model, trainloader):
             optimizer.step()
 
             if i % ITER_LOG == ITER_LOG - 1:
-                wandb.log({"loss": loss_log / ITER_LOG})
+                # wandb.log({"loss": loss_log / ITER_LOG})
 
                 print('[%d, %5d] Running loss: %.3f' %
                       (epoch + 1, i + 1, loss_log / ITER_LOG))

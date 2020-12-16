@@ -42,18 +42,13 @@ class DatasetNorm(Dataset):
             # sr = 44100
 
         target = np.zeros(params.OUT_SHAPE)
+        delimeter = 5001 // (params.OUT_SHAPE - 1)
         if not os.stat(path_txt).st_size == 0:
-
-            flag = 0
-            # with open(path_txt) as f:
-            #   s = f.readlines()
-            #   if s == ['\n']:
-            #     flag = 1
-
-            if not flag:
+            if not os.stat(path_txt).st_size == 0:
                 points = pd.read_csv(path_txt, header=None).values[:, 0]
                 for point in points:
-                    target[point // 10] = 1.0
+                    p = point // delimeter if delimeter != 1 else point
+                    target[p] = 1.0
 
                     # if self.transform:
         #     wav = self.transform(wav)
@@ -61,6 +56,6 @@ class DatasetNorm(Dataset):
 
         featurizer = torchaudio.transforms.MelSpectrogram(n_mels=self.n_mels)
         mels = featurizer(wav)
-        mels = Norm(mels, torch.mean(mels), torch.std(mels))
+        # mels = Norm(mels, torch.mean(mels), torch.std(mels))
 
         return mels, torch.tensor(target)
