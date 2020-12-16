@@ -4,7 +4,9 @@ import torchaudio
 import os
 import pandas as pd
 import numpy as np
-from config import params
+from config import get_params
+
+params = get_params()
 
 
 def Norm(mel, mean, std, eps=1e-8):

@@ -2,12 +2,12 @@ import torch
 from torch import nn
 import wandb
 import datetime
-from config import params
+from config import get_params
 
 
 def train(model, trainloader):
-    if not params.ITER_LOG:
-        ITER_LOG = trainloader.__len__() - 1
+    params = get_params()
+    ITER_LOG = params.ITER_LOG
 
     device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 

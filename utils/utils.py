@@ -2,27 +2,9 @@ import numpy as np
 import torch
 import random
 from model.model import TempoCNN
-from config import params
+from config import get_params
 
-
-class DictX(dict):
-    def __getattr__(self, key):
-        try:
-            return self[key]
-        except KeyError as k:
-            raise AttributeError(k)
-
-    def __setattr__(self, key, value):
-        self[key] = value
-
-    def __delattr__(self, key):
-        try:
-            del self[key]
-        except KeyError as k:
-            raise AttributeError(k)
-
-    def __repr__(self):
-        return '<DictX ' + dict.__repr__(self) + '>'
+params = get_params()
 
 
 def set_random_seed(seed):
@@ -41,3 +23,13 @@ def load_model():
     model = TempoCNN()
     model.load_state_dict(torch.load(params.MODEl_PATH))
     model.eval()
+
+
+def accuracy(preds, labels):
+    accuracy = 0.0
+    for i in range(preds.shape[0]):
+        for j in range(preds.shape[1]):
+            if preds[i][j] > 0.15 and labels[i][j] == 1:
+                accuracy += 1
+
+    return accuracy / torch.sum(labels)

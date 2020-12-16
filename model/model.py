@@ -1,6 +1,8 @@
 import torch
 from torch import nn
-from config import params
+from config import get_params
+
+params = get_params()
 
 
 class MultiFilterBlock(nn.Module):

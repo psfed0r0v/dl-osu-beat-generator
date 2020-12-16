@@ -1,16 +1,35 @@
-from utils.utils import DictX
+class DictX(dict):
+    def __getattr__(self, key):
+        try:
+            return self[key]
+        except KeyError as k:
+            raise AttributeError(k)
 
-params = DictX({
-    'MODE': 'normal',
-    'DATA_PATH': 'data/',
-    'CUT_RATE_SEC': 5,
-    'RANDOM_SEED': 42,
+    def __setattr__(self, key, value):
+        self[key] = value
 
-    # model params
-    'OUT_SHAPE': 5001,
-    'N_EPOCHS': 3,
-    'LEARNING_RATE': 0.001,
-    'ITER_LOG': 50,
-    'BATCH_SIZE': 16,
-    'MODEL_PATH': 'tempo_model.pth'
-})
+    def __delattr__(self, key):
+        try:
+            del self[key]
+        except KeyError as k:
+            raise AttributeError(k)
+
+    def __repr__(self):
+        return '<DictX ' + dict.__repr__(self) + '>'
+
+
+def get_params():
+    return DictX({
+        'MODE': 'normal',
+        'DATA_PATH': 'data/',
+        'CUT_RATE_SEC': 5,
+        'RANDOM_SEED': 42,
+
+        # model params
+        'OUT_SHAPE': 101,
+        'N_EPOCHS': 5,
+        'LEARNING_RATE': 0.001,
+        'ITER_LOG': 50,
+        'BATCH_SIZE': 32,
+        'MODEL_PATH': 'tempo_model.pth'
+    })
