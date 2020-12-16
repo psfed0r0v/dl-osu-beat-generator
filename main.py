@@ -7,18 +7,18 @@ from config import params
 
 DATA_PATH = params['DATA_PATH']
 CUT_RATE_SEC = params['CUT_RATE_SEC']
+MODE = params['MODE']
 
 
 def main():
     cur = os.getcwd()
-    Path(cur + '/data').mkdir(parents=True, exist_ok=True)
     Path(cur + '/cutted_data').mkdir(parents=True, exist_ok=True)
     Path(cur + '/cutted_data/audio').mkdir(parents=True, exist_ok=True)
     Path(cur + '/cutted_data/text').mkdir(parents=True, exist_ok=True)
 
-    audios = [f for f in os.listdir(DATA_PATH + 'audio') if isfile(join(DATA_PATH + 'audio', f))]
+    audios = [f for f in os.listdir(DATA_PATH + 'audio_' + MODE) if isfile(join(DATA_PATH + 'audio_' + MODE, f))]
     for i in range(len(audios)):
-        sound = AudioSegment.from_mp3(DATA_PATH + 'audio/' + str(i) + '.mp3')
+        sound = AudioSegment.from_mp3(DATA_PATH + f'audio_{MODE}/' + str(i) + '.mp3')
         sound.export(DATA_PATH + f'audio_{str(i)}.wav', format='wav')
         tmp = SplitWavAudio(f'audio_{str(i)}.wav', 'text/' + str(i) + '.osu', DATA_PATH, 'cutted_data/')
         tmp.multiple_split(CUT_RATE_SEC)
