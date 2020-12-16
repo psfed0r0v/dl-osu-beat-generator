@@ -1,4 +1,7 @@
 from pydub import AudioSegment
+from config import params
+
+MODE = params['MODE']
 
 
 class SplitWavAudio:
@@ -32,8 +35,8 @@ class SplitWavAudio:
         t1 = from_min * 1000
         t2 = to_min * 1000
         split_audio = self.audio[t1:t2]
-        split_audio.export(self.output_folder + 'audio/' + split_filename, format="wav")
-        self.write_file(t1, t2, self.output_folder + 'text/' + split_filename + '.txt')
+        split_audio.export(self.output_folder + f'audio_{MODE}/' + split_filename, format="wav")
+        self.write_file(t1, t2, self.output_folder + f'text_{MODE}/' + split_filename + '.txt')
 
     def multiple_split(self, sec_per_split):
         with open(self.folder + self.osu_filename, 'r') as f:

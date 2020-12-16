@@ -3,9 +3,10 @@ from os.path import isfile, join
 from pathlib import Path
 from pydub import AudioSegment
 from utils.read_data import SplitWavAudio
+from config import params
 
-DATA_PATH = 'data/'
-CUT_RATE_SEC = 5
+DATA_PATH = params['DATA_PATH']
+CUT_RATE_SEC = params['CUT_RATE_SEC']
 
 
 def main():
