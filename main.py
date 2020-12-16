@@ -20,7 +20,7 @@ def main():
     for i in range(len(audios)):
         sound = AudioSegment.from_mp3(DATA_PATH + f'audio_{MODE}/' + str(i) + '.mp3')
         sound.export(DATA_PATH + f'audio_{str(i)}.wav', format='wav')
-        tmp = SplitWavAudio(f'audio_{str(i)}.wav', 'text/' + str(i) + '.osu', DATA_PATH, 'cutted_data/')
+        tmp = SplitWavAudio(f'audio_{str(i)}.wav', f'text_{MODE}/' + str(i) + '.osu', DATA_PATH, 'cutted_data/')
         tmp.multiple_split(CUT_RATE_SEC)
         path = Path(DATA_PATH + f'audio_{str(i)}.wav')
         path.unlink()
