@@ -34,7 +34,7 @@ class MultiFilterBlock(nn.Module):
 
 
 class TempoCNN(nn.Module):
-    def __init__(self, kernel_size=5, n_blocks=3, mf_channels=24, dropout=0.5):
+    def __init__(self, kernel_size=5, n_blocks=3, mf_channels=24, dropout=0.2):
         super(TempoCNN, self).__init__()
         main = [nn.Conv2d(in_channels=1, out_channels=16, kernel_size=(1, kernel_size),
                           padding=(0, kernel_size // 2)),
@@ -65,7 +65,7 @@ class TempoCNN(nn.Module):
                  #  nn.ELU(),
                  #  nn.BatchNorm1d(1028),
                  #  nn.Linear(1028,5001),
-                 nn.Softmax()]
+                 nn.Sigmoid()]
 
         self.net = nn.Sequential(*main)
 

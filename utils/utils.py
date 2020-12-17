@@ -21,15 +21,27 @@ def save_model(model):
 
 def load_model():
     model = TempoCNN()
-    model.load_state_dict(torch.load(params.MODEl_PATH))
+    model.load_state_dict(torch.load(params.MODEL_PATH))
     model.eval()
+    return model
 
 
-def accuracy(preds, labels):
+def accuracy(preds, labels, threshold=0.5):
+    preds = torch.sigmoid(preds)
     accuracy = 0.0
     for i in range(preds.shape[0]):
         for j in range(preds.shape[1]):
-            if preds[i][j] > 0.15 and labels[i][j] == 1:
+            if preds[i][j] > threshold and labels[i][j] == 1:
                 accuracy += 1
 
     return accuracy / torch.sum(labels)
+
+
+def binary_acc(y_pred, y_test):
+    y_pred_tag = torch.round(torch.sigmoid(y_pred))
+
+    correct_results_sum = (y_pred_tag == y_test).sum().float()
+    acc = correct_results_sum / y_test.shape[0]
+    acc = torch.round(acc * 100)
+
+    return acc / len(y_pred_tag)

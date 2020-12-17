@@ -3,6 +3,7 @@ import os
 from os.path import isfile, join
 from pathlib import Path
 from pydub import AudioSegment
+import math
 
 params = get_params()
 
@@ -45,13 +46,46 @@ class SplitWavAudio:
         with open(self.folder + self.osu_filename, 'r') as f:
             out = f.readlines()
         out_norm = []
+        slidermultiplier = 0
+        timings = {}
+        timing_flag = False
+        last_inherited = 0
         for i, s in enumerate(out):
+            # if s != '\n':
+            if 'SliderMultiplier' in s:
+                slidermultiplier = float(s.split(':')[1])
+            if timing_flag and (s == '' or s == '\n'):
+                timing_flag = False
+            if timing_flag:
+                splits = s.split(',')
+                if splits[6] == '1':
+                    timings[int(splits[0].split('.')[0])] = (int(splits[1].split('.')[0]), 1)
+                    last_inherited = int(splits[1].split('.')[0])
+                else:
+                    timings[int(splits[0].split('.')[0])] = (last_inherited, abs(100 / float(splits[1].split('.')[0])))
+            if 'TimingPoints' in s:
+                timing_flag = True
             if 'HitObjects' in s:
                 out_norm = out[i + 1:]
                 break
         res = []
         for i in out_norm:
-            res.append(int(i.split(',')[2]))
+            splits = i.split(',')
+            res.append(int(splits[2]))
+            if int(splits[3]) % 16 - 4 == 2 or int(splits[3]) % 16 == 2:
+                times = list(timings.keys())
+                timing = -1
+                for j in range(len(times) - 1):
+                    if int(splits[2]) < times[j + 1] and int(splits[2]) >= times[j]:
+                        timing = times[j]
+                        break
+                if timing == -1:
+                    timing = times[len(times) - 1]
+                px_per_beat = slidermultiplier * 100 * timings[timing][1]
+                beats_number = float(splits[7]) * int(splits[6]) / px_per_beat
+                duration = math.ceil(beats_number * timings[timing][0])
+                endtime = int(splits[2]) + duration
+                res.append(endtime)
         self.points = res
 
         total_sec = int(self.get_duration())

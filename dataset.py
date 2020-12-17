@@ -24,6 +24,7 @@ class DatasetNorm(Dataset):
         self.wav_dir = wav_dir
         self.transform = transform
         self.n_mels = n_mels
+        self.featurizer = torchaudio.transforms.MelSpectrogram(n_mels=self.n_mels, sample_rate=44100)
 
     def __len__(self):
         return len(self.data_audio)
@@ -42,20 +43,19 @@ class DatasetNorm(Dataset):
             # sr = 44100
 
         target = np.zeros(params.OUT_SHAPE)
-        delimeter = 5001 // (params.OUT_SHAPE - 1)
+        delimeter = 5000 // (params.OUT_SHAPE - 1)
         if not os.stat(path_txt).st_size == 0:
             if not os.stat(path_txt).st_size == 0:
                 points = pd.read_csv(path_txt, header=None).values[:, 0]
                 for point in points:
-                    p = point // delimeter if delimeter != 1 else point
+                    p = (point - 1) // delimeter if delimeter != 1 else point - 1
                     target[p] = 1.0
 
-                    # if self.transform:
+        # if self.transform:
         #     wav = self.transform(wav)
-        wav = self.noise(wav)
+        # wav = self.noise(wav)
 
-        featurizer = torchaudio.transforms.MelSpectrogram(n_mels=self.n_mels)
-        mels = featurizer(wav)
+        mels = self.featurizer(wav)
         # mels = Norm(mels, torch.mean(mels), torch.std(mels))
 
         return mels, torch.tensor(target)

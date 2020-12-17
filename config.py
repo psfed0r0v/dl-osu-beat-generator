@@ -26,10 +26,11 @@ def get_params():
         'RANDOM_SEED': 42,
 
         # model params
-        'OUT_SHAPE': 101,
+        'OUT_SHAPE': 5000,
         'N_EPOCHS': 5,
-        'LEARNING_RATE': 0.001,
+        'LEARNING_RATE': 0.0003,
         'ITER_LOG': 50,
         'BATCH_SIZE': 32,
-        'MODEL_PATH': 'tempo_model.pth'
+        'MODEL_PATH': 'tempo_model.pth',
+        'LOAD_MODEL': False
     })
