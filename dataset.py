@@ -38,9 +38,7 @@ class DatasetNorm(Dataset):
         wav, sr = torchaudio.load(path_audio)
         wav = torch.mean(wav, dim=0)
         path_txt = self.data_txt[index]
-        if sr == 48000:
-            wav = torchaudio.transforms.Resample(48000, 44100)(wav)
-            # sr = 44100
+        wav = torchaudio.transforms.Resample(sr, 16000)(wav)
 
         target = np.zeros(params.OUT_SHAPE)
         delimeter = 5000 // (params.OUT_SHAPE - 1)
