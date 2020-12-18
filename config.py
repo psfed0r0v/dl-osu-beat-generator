@@ -24,6 +24,8 @@ def get_params():
         'DATA_PATH': 'data/',
         'CUT_RATE_SEC': 5,
         'RANDOM_SEED': 42,
+        'OSU_TRACKS_DIR': 'osu_maps',
+        'ENUMERATE_FROM': 1,
 
         # model params
         'OUT_SHAPE': 5000,
