@@ -24,7 +24,7 @@ class DatasetNorm(Dataset):
         self.wav_dir = wav_dir
         self.transform = transform
         self.n_mels = n_mels
-        self.featurizer = torchaudio.transforms.MelSpectrogram(n_mels=self.n_mels, sample_rate=44100)
+        self.featurizer = torchaudio.transforms.MelSpectrogram(n_mels=self.n_mels, sample_rate=16000)
 
     def __len__(self):
         return len(self.data_audio)
