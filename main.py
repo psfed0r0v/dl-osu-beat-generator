@@ -6,6 +6,7 @@
 # from config import get_params
 # from dataset import DatasetNorm
 from utils.read_data import parse_data
+from utils import make_dataset
 # from utils.utils import set_random_seed, save_model, load_model, accuracy
 # from model.model import TempoCNN
 # from train import train
@@ -52,4 +53,5 @@ from utils.read_data import parse_data
 
 
 if __name__ == '__main__':
+    # make_dataset(params.OSU_TRACKS_DIR, params.DATA_PATH + '/audio_normal', + params.DATA_PATH + '/text_normal', params.ENUMERATE_FROM)
     parse_data()
