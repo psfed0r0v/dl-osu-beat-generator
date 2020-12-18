@@ -9,7 +9,6 @@ def make_dataset(dir, audio_dir, text_dir, enum_from=1):
 
     with zipfile.ZipFile(track, 'r') as zip_ref:
         files = zip_ref.namelist()
-        print(files)
         found_audio = 0
         found_txt = 0
         audio_file = ''
@@ -18,12 +17,10 @@ def make_dataset(dir, audio_dir, text_dir, enum_from=1):
           if f == 'audio.mp3':
             found_audio+=1
             audio_file = f
-            print(audio_file)
           
           if '.osu' in f:
             found_txt+=1
             text_file=f
-            print(text_file)
 
           if found_txt == 1 and found_audio ==1:
             found_audio = 0
