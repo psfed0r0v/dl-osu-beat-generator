@@ -31,7 +31,7 @@ def make_dataset(dir, audio_dir, text_dir, enum_from=1):
             os.rename((audio_dir + '/'+ audio_file), (audio_dir+ '/'+str(counter)+'.mp3'))
             
             zip_ref.extract(text_file,text_dir)
-            os.rename((text_dir + '/'+ text_file), (text_dir+ '/'+str(counter)+'.txt'))
+            os.rename((text_dir + '/'+ text_file), (text_dir+ '/'+str(counter)+'.osu'))
 
             counter+=1
             break
