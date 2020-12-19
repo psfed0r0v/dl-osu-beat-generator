@@ -1,5 +1,7 @@
 import zipfile
 import os
+import torch
+import torchaudio
 
 def make_dataset(dir, audio_dir, text_dir, enum_from=1):
   tracks = [dir + '/'+track for track in os.listdir(dir)]
@@ -35,3 +37,11 @@ def make_dataset(dir, audio_dir, text_dir, enum_from=1):
 
             counter+=1
             break
+            
+            
+def lower_quality(audio_dir, new_sr):
+  tracks = [audio_dir + track for track in os.listdir(audiodir)]
+  for track in tracks:
+    wav, sr = torchaudio.load(track)
+    wav = torchaudio.transforms.Resample(sr, new_sr)(wav)
+    torchaudio.save(track, wav , new_sr)
