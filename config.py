@@ -26,6 +26,7 @@ def get_params():
         'RANDOM_SEED': 42,
         'OSU_TRACKS_DIR': 'osu_maps',
         'ENUMERATE_FROM': 1,
+        'SAMPLE_RATE': 16000,
 
         # model params
         'OUT_SHAPE': 5000,
