@@ -11,4 +11,4 @@ if __name__ == '__main__':
     make_dataset(params.OSU_TRACKS_DIR, params.DATA_PATH + 'audio_normal', params.DATA_PATH + 'text_normal', params.ENUMERATE_FROM)
     parse_data()
     cur = os.getcwd()
-    lower_quality(cur + f'/cutted_data/audio_{params.MODE}, params.SAMPLE_RATE)
+    lower_quality(cur + f'/cutted_data/audio_{params.MODE}', params.SAMPLE_RATE)
