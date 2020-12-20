@@ -39,7 +39,7 @@ def make_dataset(dir, audio_dir, text_dir, enum_from=1):
             
             
 def lower_quality(audio_dir, new_sr):
-  tracks = [audio_dir + track for track in os.listdir(audiodir)]
+  tracks = [audio_dir + track for track in os.listdir(audio_dir)]
   for track in tracks:
     wav, sr = torchaudio.load(track)
     wav = torchaudio.transforms.Resample(sr, new_sr)(wav)
