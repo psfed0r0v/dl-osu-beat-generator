@@ -5,7 +5,6 @@ import torchaudio
 
 def make_dataset(dir, audio_dir, text_dir, enum_from=1):
   tracks = [dir + '/'+track for track in os.listdir(dir)]
-  print(tracks)
 
   counter = enum_from
   for track in tracks:
